@@ -1,26 +1,22 @@
 name: Run Tests on Push
 
-on: [push]  # Execútase cada vez que se faga 'git push'
+on: [push]  
 
 jobs:
   test:
-    runs-on: ubuntu-latest  # Execútase nun contedor Ubuntu
+    runs-on: ubuntu-latest  
 
     steps:
-      # Paso 1: Fai checkout do código
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Paso 2: Configura Node.js
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18'  # Usa Node.js 18 (ou a versión que necesites)
+          node-version: '18'
 
-      # Paso 3: Instala dependencias
       - name: Install dependencies
         run: npm install
 
-      # Paso 4: Executa os tests
       - name: Run tests
         run: npm run test
