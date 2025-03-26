@@ -1,6 +1,6 @@
 pipeline {
   environment {
-    IMAGEN = "cparisfp/myapp"
+    IMAGEN = "a24rodrigodc/myapp"
     BUILD_NUMBER = "1"
     USUARIO = 'USER_DOCKERHUB'
   }
@@ -8,7 +8,7 @@ pipeline {
   stages {
     stage('Clone') {
       steps {
-        git branch: "main", url: 'https://github.com/cristina-paris/practicagithubactions'
+        git branch: "main", url: 'https://github.com/a24rodrigodc/practica_7.1'
       }
     }
     stage('Build') {
