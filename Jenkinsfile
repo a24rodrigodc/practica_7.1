@@ -2,7 +2,7 @@ pipeline {
     agent {
          docker {
              image 'node:18-alpine'  // Imaxe lixeira con Node.js 18
-             args '-u root -v /var/run/docker.sock:/var/run/docker.sock'         // Executar como root para evitar problemas de permisos
+             args '-u root'         // Executar como root para evitar problemas de permisos
          }
     }
     environment {
@@ -21,10 +21,12 @@ pipeline {
             steps {
                 sh 'npm install'
                 sh 'npm test'
+                sh
             }
         }
 
         stage('Build Docker image') {
+            agent any
             when {
                 expression { currentBuild.result == null || currentBuild.result == 'SUCCESS' }
             }
@@ -36,6 +38,7 @@ pipeline {
         }
 
         stage('Push to Docker Hub') {
+            agent any
             steps {
                 script {
                     docker.withRegistry('https://registry.hub.docker.com', 'dockerhub-credentials') {
