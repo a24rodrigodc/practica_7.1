@@ -25,7 +25,6 @@ pipeline {
         }
 
         stage('Build Docker image') {
-            agent any
             when {
                 expression { currentBuild.result == null || currentBuild.result == 'SUCCESS' }
             }
