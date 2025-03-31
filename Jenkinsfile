@@ -1,4 +1,10 @@
 pipeline {
+    agent {
+         docker {
+             image 'node:18-alpine'  // Imaxe lixeira con Node.js 18
+             args '-u root'          // Executar como root para evitar problemas de permisos
+         }
+    }
     agent any
 
     environment {
