@@ -5,8 +5,6 @@ pipeline {
              args '-u root'          // Executar como root para evitar problemas de permisos
          }
     }
-    agent any
-
     environment {
         IMAGE_NAME = "a24rodrigodc/nuse"
         DOCKERHUB_CREDENTIALS = credentials('USER_DOCKERHUB')
