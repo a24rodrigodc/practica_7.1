@@ -1,6 +1,18 @@
 pipeline {
     agent any
+
+    environment {
+        IMAGE_NAME = "a24rodrigodc/nuse"
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials')
+    }
+
     stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
         stage('Install dependencies and run tests') {
             steps {
                 sh 'npm install'
