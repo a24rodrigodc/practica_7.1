@@ -1,36 +1,33 @@
 pipeline {
-  environment {
-    IMAGEN = "a24rodrigodc/myapp"
-    BUILD_NUMBER = "1"
-    USUARIO = 'USER_DOCKERHUB'
-  }
-  agent any
-  stages {
-    stage('Clone') {
-      steps {
-        git branch: "main", url: 'https://github.com/a24rodrigodc/practica_7.1'
-      }
-    }
-    stage('Build') {
-      steps {
-        script {
-          newApp = docker.build "$IMAGEN:$BUILD_NUMBER"
+    agent {
+        docker {
+            image 'node:18-alpine'  // Imaxe lixeira con Node.js 18
+            args '-u root'          // Executar como root para evitar problemas de permisos
         }
-      }
     }
-    stage('Deploy') {
-      steps {
-        script {
-          docker.withRegistry( '', USUARIO ) {
-            newApp.push()
-          }
+    stages {
+        stage('Instalar dependencias') {
+            steps {
+                sh 'npm install'
+            }
         }
-      }    
+        
+        stage('Executar tests') {
+            steps {
+                sh 'npm run test'
+            }
+        }
     }
-    stage('Clean Up') {
-      steps {
-        sh "docker rmi $IMAGEN:$BUILD_NUMBER"
-      }
+    
+    post {
+        always {
+            echo '🔹 Pipeline completado'
+        }
+        success {
+            echo '✅ Todos os pasos completáronse correctamente'
+        }
+        failure {
+            echo '❌ O pipeline fallou. Consulta os logs para máis detalles'
+        }
     }
-  }
 }
