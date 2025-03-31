@@ -1,33 +1,41 @@
 pipeline {
-    agent {
-        docker {
-            image 'node:18-alpine'  // Imaxe lixeira con Node.js 18
-            args '-u root'          // Executar como root para evitar problemas de permisos
-        }
-    }
+    agent any
     stages {
-        stage('Instalar dependencias') {
+        stage('Install dependencies and run tests') {
             steps {
                 sh 'npm install'
+                sh 'npm test'
             }
         }
-        
-        stage('Executar tests') {
+
+        stage('Build Docker image') {
+            when {
+                expression { currentBuild.result == null || currentBuild.result == 'SUCCESS' }
+            }
             steps {
-                sh 'npm run test'
+                script {
+                    docker.build("${IMAGE_NAME}")
+                }
+            }
+        }
+
+        stage('Push to Docker Hub') {
+            steps {
+                script {
+                    docker.withRegistry('https://registry.hub.docker.com', 'dockerhub-credentials') {
+                        docker.image("${IMAGE_NAME}").push('latest')
+                    }
+                }
             }
         }
     }
-    
+
     post {
-        always {
-            echo '🔹 Pipeline completado'
+        failure {
+            echo 'Pipeline failed!'
         }
         success {
-            echo '✅ Todos os pasos completáronse correctamente'
-        }
-        failure {
-            echo '❌ O pipeline fallou. Consulta os logs para máis detalles'
+            echo 'Pipeline succeeded! Image pushed to Docker Hub.'
         }
     }
 }
