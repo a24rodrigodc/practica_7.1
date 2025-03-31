@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         IMAGE_NAME = "a24rodrigodc/nuse"
-        DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials')
+        DOCKERHUB_CREDENTIALS = credentials('USER_DOCKERHUB')
     }
 
     stages {
